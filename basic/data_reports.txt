@@ -1,0 +1,29 @@
+Examples of sequence alignment :
+------------------------------------
+> 1 :
+(s1) : ATTAC
+(s2) : AATTC
+
+result :
+score = 4
+(aligned s1) : -ATTAC
+(aligned s2) : AATT-C
+------------------------------------
+> 2 :
+(s1) : AGGGCT
+(s2) : AGGCA
+
+result : 
+score = 4
+(aligned s1) : AGGGCT
+(aligned s2) : A-GGCA
+------------------------------------
+> 3 :
+(s1) : ATGGCCTC
+(s2) : ACGGCTC
+
+result :
+score = 6
+(aligned s1) : ATGGCCTC
+(aligned s2) : ACGGC-TC
+------------------------------------
