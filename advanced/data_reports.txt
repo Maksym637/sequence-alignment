@@ -1,0 +1,15 @@
+About data_sequences :
+
+In this folder you can find 4 files with fasta extension.
+
+fasta file extension - is used for files related to biology.
+The .fasta file extension is used to describe files that has
+something to do with nucleic acid, DNA and protein sequences.
+Aside from this basic information saved in the .fasta format,
+it also contains headers containing other information such as 
+comments.
+
+datasets : 
+1.) https://www.kaggle.com/datasets/nageshsingh/dna-sequence-dataset
+2.) https://www.kaggle.com/datasets/radenkovic/coronavirus-accession-sars-mers-cov2
+3.) https://www.ncbi.nlm.nih.gov/ in search type `NC_001477` for instance
