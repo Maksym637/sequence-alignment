@@ -4,6 +4,7 @@
 #include <time.h>
 #include <sstream>
 #include <omp.h>
+#include <chrono>
 
 using namespace std;
 
@@ -11,8 +12,8 @@ const float MATCH = 1;
 const float MISMATCH = 0;
 const float GAP = 0;
 
-const int NUMBER_SEQUENCES = 500;
-const string DATA_PATH = "data_sequences//500_sequences.fasta";
+const int NUMBER_SEQUENCES = 400;
+const string DATA_PATH = "data_sequences//400_sequences.fasta";
 const string REPORTS = "output//report.txt";
 
 const int THREADS_NUMBER = 4;
@@ -108,9 +109,20 @@ float maximum(float a, float b, float c) {
 int main() {
 
     string temp;
-    int count = 0;
 
-    cout << setw(39) << get_time() << endl;
+    int scores_count, max_scores_count = 0, count = 0;
+
+    int scores_length = (NUMBER_SEQUENCES - 1) * (NUMBER_SEQUENCES / 2) * 3;
+    int max_scores_length = NUMBER_SEQUENCES / 100 * 60;
+    int loop_count = NUMBER_SEQUENCES / 100;
+
+    float *scores = new float[scores_length];
+    float *max_scores = new float[max_scores_length];
+
+    cout << "-------------------------------------------------------------" << endl;
+    cout << get_time() << endl;
+
+    std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
 
     string sequence_arrays[NUMBER_SEQUENCES];
     ifstream sequencefile(DATA_PATH);
@@ -127,15 +139,6 @@ int main() {
 		count += 1;
 	}
     sequencefile.close();
-
-    int scores_count, max_scores_count = 0;
-
-    int scores_length = (NUMBER_SEQUENCES - 1) * (NUMBER_SEQUENCES / 2) * 3;
-    int max_scores_length = NUMBER_SEQUENCES / 100 * 60;
-    int loop_count = NUMBER_SEQUENCES / 100;
-
-    float *scores = new float[scores_length];
-    float *max_scores = new float[max_scores_length];
 
     omp_set_num_threads(THREADS_NUMBER);
 
@@ -202,24 +205,27 @@ int main() {
 
     ofstream result_file(REPORTS);
 
-    result_file << endl << setw(70) << "[SCORE TABLE]" << endl << endl << endl;
-    result_file << setw(47) << "No" << setw(10) << "S1" << setw(10) << "S2" << setw(15) << "Score" << endl;
-    result_file << setw(86) << "--------------------------------------------" << endl;
+    result_file << "No\t" << " | " << "[No] sequence 1\t" << " | " << "[No] sequence 2\t" << " | " << "Score" << endl;
+    result_file << "-----------------------------------------------------" << endl;
 
     count = 1;
     
-    // for(int i = max_scores_count * 3 - 3; i > max_scores_count * 3 - 63; i -=3) {
-    //     result_file << setw(47) << count << setw(10) << max_scores[i + 1] << setw(10) << max_scores[i + 2] << setw(17) << max_scores[i] << endl;
-    //     result_file << "sequence 1 :" << sequence_arrays[ (int) max_scores[i + 1]] << endl;
-    //     result_file << "sequence 2 :" << sequence_arrays[ (int) max_scores[i + 2]] << endl;
-    //     result_file << setw(86) << "--------------------------------------------" << endl;
-    //     count += 1;
-    // }
+    for(int i = max_scores_count * 3 - 3; i > max_scores_count * 3 - 63; i -=3) {
+        result_file << count << setw(15) << max_scores[i + 1] << setw(18) << max_scores[i + 2] << setw(18) << max_scores[i] << endl;
+        result_file << "-----------------------------------------------------" << endl;
+        count += 1;
+    }
 
     result_file.close();
 
-    cout << endl << setw(39) << get_time() << endl;
+    cout << get_time() << endl;
+
+    std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
+    long time_execution = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
+
+    cout << "-------------------------------------------------------------" << endl;
+    cout << "Time spent for program execution is : " << time_execution << " (seconds) " << endl;
+    cout << "-------------------------------------------------------------" << endl;
 
     return 0;
 }
-
